@@ -24,6 +24,7 @@
   var onButtonClose = function () {
     window.util.addClass(filterForm, 'hidden');
     uploadForm.reset();
+    window.effects.reset();
     document.removeEventListener('keydown', onUploadEscKeydown);
   };
   buttonClose.addEventListener('click', onButtonClose);

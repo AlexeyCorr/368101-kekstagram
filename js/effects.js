@@ -43,6 +43,12 @@
     window.resize.photo(evt, pictureReview);
   });
 
+  var resetEffects = function () {
+    pictureReview.classList.remove(pictureReview.classList[1]);
+    pictureReview.style.filter = '';
+    window.util.addClass(scaleField, 'hidden');
+  };
+
   var filters = {
     'effect-chrome': function (value) {
       return 'grayscale(' + value.toFixed(1) + ')';
@@ -74,4 +80,8 @@
     var userValue = (MAX_VALUE_FILTERS[userFilter] * (clientX - valueLineX) / valueWidth);
     pictureReview.style.filter = filters[userFilter](userValue);
   });
+
+  window.effects = {
+    reset: resetEffects
+  };
 })();
