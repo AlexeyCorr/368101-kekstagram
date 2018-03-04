@@ -6,7 +6,7 @@
   var MAX_NUMBER_HESHTAG = 5;
 
   var hashtagField = document.querySelector('.upload-form-hashtags');
-  // Валивация формы
+
   var getCustomValidity = function (tagsField) {
     var errorMessages = [];
     var hashtags = tagsField.trim().toLowerCase().split(' ');

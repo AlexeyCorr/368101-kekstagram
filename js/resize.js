@@ -41,7 +41,5 @@
     }
   };
 
-  window.resize = {
-    photo: onResizeClick
-  };
+  window.resize = onResizeClick;
 })();
