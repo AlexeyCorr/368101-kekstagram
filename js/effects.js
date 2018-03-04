@@ -8,6 +8,10 @@
     'effect-phobos': 3,
     'effect-heat': 3
   };
+  var LOCATION_X = {
+    MIN: 0,
+    MAX: 100
+  };
   var pictureReview = document.querySelector('.effect-image-preview');
   var resizeField = document.querySelector('.upload-resize-controls');
   var effectControlsField = document.querySelector('.upload-effect-controls');
@@ -40,8 +44,14 @@
 
   // ========RESIZE=========
   resizeField.addEventListener('click', function (evt) {
-    window.resize.photo(evt, pictureReview);
+    window.resize(evt, pictureReview);
   });
+
+  var resetEffects = function () {
+    pictureReview.classList.remove(pictureReview.classList[1]);
+    pictureReview.style.filter = '';
+    window.util.addClass(scaleField, 'hidden');
+  };
 
   var filters = {
     'effect-chrome': function (value) {
@@ -60,18 +70,44 @@
       return 'brightness(' + value.toFixed(1) + ')';
     },
   };
+  effectControlPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var startCoordsX = evt.clientX;
 
-  effectControlLine.addEventListener('mouseup', function (evt) {
-    var clientX = evt.clientX;
-    var valueLineX = effectControlLine.getBoundingClientRect().left;
-    var valueWidth = effectControlLine.getBoundingClientRect().width;
-    var userPercent = (100 * (clientX - valueLineX)) / valueWidth;
-    if (clientX >= valueLineX && clientX <= valueLineX + valueWidth) {
-      effectControlPin.style.left = userPercent + '%';
-      effectControlVal.style.width = userPercent + '%';
-    }
-    var userFilter = pictureReview.classList[1];
-    var userValue = (MAX_VALUE_FILTERS[userFilter] * (clientX - valueLineX) / valueWidth);
-    pictureReview.style.filter = filters[userFilter](userValue);
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shiftX = startCoordsX - moveEvt.clientX;
+      var fullWidth = effectControlLine.getBoundingClientRect().width;
+      var currentCoordsX = ((effectControlPin.offsetLeft - shiftX) / fullWidth) * 100;
+      startCoordsX = moveEvt.clientX;
+
+      if (currentCoordsX > LOCATION_X.MAX) {
+        currentCoordsX = effectControlPin.style.left;
+      } else if (currentCoordsX < LOCATION_X.MIN) {
+        currentCoordsX = effectControlPin.style.left;
+      }
+
+      effectControlPin.style.left = currentCoordsX + '%';
+      effectControlVal.style.width = currentCoordsX + '%';
+
+      var userFilter = pictureReview.classList[1];
+      var userValue = (MAX_VALUE_FILTERS[userFilter] * currentCoordsX) / 100;
+      pictureReview.style.filter = filters[userFilter](userValue);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
+
+  window.effects = {
+    reset: resetEffects
+  };
 })();
