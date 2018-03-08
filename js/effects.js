@@ -8,10 +8,6 @@
     'effect-phobos': 3,
     'effect-heat': 3
   };
-  var LOCATION_X = {
-    MIN: 0,
-    MAX: 100
-  };
   var pictureReview = document.querySelector('.effect-image-preview');
   var resizeField = document.querySelector('.upload-resize-controls');
   var effectControlsField = document.querySelector('.upload-effect-controls');
@@ -70,42 +66,14 @@
       return 'brightness(' + value.toFixed(1) + ')';
     },
   };
-  effectControlPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-    var startCoordsX = evt.clientX;
 
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
+  var getValueFilter = function (currentCoords) {
+    var userFilter = pictureReview.classList[1];
+    var userValue = (MAX_VALUE_FILTERS[userFilter] * currentCoords) / 100;
+    pictureReview.style.filter = filters[userFilter](userValue);
+  };
 
-      var shiftX = startCoordsX - moveEvt.clientX;
-      var fullWidth = effectControlLine.getBoundingClientRect().width;
-      var currentCoordsX = ((effectControlPin.offsetLeft - shiftX) / fullWidth) * 100;
-      startCoordsX = moveEvt.clientX;
-
-      if (currentCoordsX > LOCATION_X.MAX) {
-        currentCoordsX = effectControlPin.style.left;
-      } else if (currentCoordsX < LOCATION_X.MIN) {
-        currentCoordsX = effectControlPin.style.left;
-      }
-
-      effectControlPin.style.left = currentCoordsX + '%';
-      effectControlVal.style.width = currentCoordsX + '%';
-
-      var userFilter = pictureReview.classList[1];
-      var userValue = (MAX_VALUE_FILTERS[userFilter] * currentCoordsX) / 100;
-      pictureReview.style.filter = filters[userFilter](userValue);
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
+  window.initSlider(effectControlLine, effectControlPin, effectControlVal, getValueFilter);
 
   window.effects = {
     reset: resetEffects

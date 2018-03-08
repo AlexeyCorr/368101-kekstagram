@@ -29,8 +29,16 @@
   };
   buttonClose.addEventListener('click', onButtonClose);
 
+  var successHandler = function () {
+    var successPopup = window.popup.createSuccessMessage();
+    document.querySelector('body').appendChild(successPopup);
+    window.util.delElemTimeout(successPopup, 'body', 2000);
+    onButtonClose();
+  };
+
   // =========ОТПРАВКА ФОРМЫ=======
-  uploadForm.addEventListener('sibmit', function (evt) {
+  uploadForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(uploadForm), successHandler, window.popup.errorHandler);
     evt.preventDefault();
   });
 })();

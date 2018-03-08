@@ -13,26 +13,25 @@
     return elementPhoto;
   };
 
-  var drawElementPhoto = function () {
+  var drawElementPhoto = function (array) {
     var fragment = document.createDocumentFragment();
     var similarPhotoList = document.querySelector('.pictures');
 
-    for (var i = 0; i < window.pictures.length; i++) {
-      fragment.appendChild(createElementPicture(window.pictures[i]));
+    for (var i = 0; i < array.length; i++) {
+      fragment.appendChild(createElementPicture(array[i]));
     }
 
     return similarPhotoList.appendChild(fragment);
   };
-  drawElementPhoto();
 
-  var cteatePictureReview = function (picture, targetPicture) {
-    picture.querySelector('img').src = targetPicture.querySelector('img').src;
-    picture.querySelector('.likes-count').textContent = targetPicture.querySelector('.picture-likes');
-    picture.querySelector('.likes-count').textContent = targetPicture.querySelector('.picture-likes').textContent;
-    picture.querySelector('.comments-count').textContent = targetPicture.querySelector('.picture-comments').textContent;
+  var successHandler = function (data) {
+    var dataPicture = data;
+    drawElementPhoto(dataPicture);
   };
 
-  window.picture = {
-    createReview: cteatePictureReview
+  var loadData = function () {
+    window.backend.load(successHandler, window.popup.errorHandler);
   };
+
+  loadData();
 })();
