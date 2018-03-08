@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var similarPhotoList = document.querySelector('.pictures');
+  var filterForm = document.querySelector('.filters');
+  var dataArray = [];
 
   var createElementPicture = function (array) {
     var similarPhotoTemplate = document.querySelector('#picture-template').content.querySelector('.picture');
@@ -15,7 +18,6 @@
 
   var drawElementPhoto = function (array) {
     var fragment = document.createDocumentFragment();
-    var similarPhotoList = document.querySelector('.pictures');
 
     for (var i = 0; i < array.length; i++) {
       fragment.appendChild(createElementPicture(array[i]));
@@ -25,8 +27,9 @@
   };
 
   var successHandler = function (data) {
-    var dataPicture = data;
-    drawElementPhoto(dataPicture);
+    dataArray = data;
+    drawElementPhoto(dataArray);
+    window.util.removeClass(filterForm, 'filters-inactive');
   };
 
   var loadData = function () {
@@ -34,4 +37,17 @@
   };
 
   loadData();
+
+  var updatePhoto = function (target, data) {
+    similarPhotoList.innerHTML = '';
+    drawElementPhoto(window.filter[target.id](data));
+  };
+
+  filterForm.addEventListener('change', function (evt) {
+    var target = evt.target.closest('input[type=radio]');
+    var sortArr = dataArray.slice();
+    if (target) {
+      window.util.debounce(updatePhoto(target, sortArr));
+    }
+  });
 })();
