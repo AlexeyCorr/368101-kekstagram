@@ -3,6 +3,7 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var lastTimeout = null;
 
   window.util = {
     getRandomValue: function (min, max) {
@@ -34,6 +35,12 @@
           document.querySelector(field).removeChild(element);
         }
       }, time);
+    },
+    debounce: function (callback, timeout) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(callback, timeout);
     }
   };
 })();
