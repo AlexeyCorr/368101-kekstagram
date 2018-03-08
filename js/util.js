@@ -3,7 +3,7 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
-  var lastTimeout = null;
+  var lastTimeout;
 
   window.util = {
     getRandomValue: function (min, max) {
