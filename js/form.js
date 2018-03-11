@@ -12,14 +12,16 @@
   };
 
   var onInputChange = function (evt) {
-    evt.preventDefault();
     window.util.removeClass(filterForm, 'hidden');
     document.addEventListener('keydown', onUploadEscKeydown);
     buttonClose.addEventListener('keydown', function () {
       window.util.isEnterEvent(evt, onButtonClose);
     });
   };
-  uploadField.addEventListener('change', onInputChange);
+  uploadField.addEventListener('change', function () {
+    window.uploadFile(uploadField);
+    onInputChange();
+  });
 
   var onButtonClose = function () {
     window.util.addClass(filterForm, 'hidden');
